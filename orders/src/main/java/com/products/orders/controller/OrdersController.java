@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.products.orders.model.Order;
+import com.products.orders.resreq.DataResponse;
 import com.products.orders.service.OrdersService;
 
 @RestController
@@ -18,14 +19,19 @@ public class OrdersController {
 
 	@Autowired
 	private OrdersService ordersService;
-	
+
 	@PostMapping("/createOrder")
 	public Order saveOrder(@RequestBody Order order) {
 		return ordersService.createProduct(order);
 	}
-	
+
 	@GetMapping("/retriveOrders")
-	public List<Order> retrieveAllOrders(){
+	public List<Order> retrieveAllOrders() {
 		return ordersService.getAllOrders();
+	}
+
+	@GetMapping("/fetchResponseData")
+	public List<DataResponse> fetchResponseData() {
+		return ordersService.getApiResponseData();
 	}
 }
