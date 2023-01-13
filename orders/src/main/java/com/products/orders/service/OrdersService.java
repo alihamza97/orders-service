@@ -40,47 +40,36 @@ public class OrdersService {
 			false);
 
 	@Transactional
-	public Order createProduct(Order order) {
+	public void createProduct(Order order) {
 		log.info("Creating Order");
-		if (!(retrieveEmail(order.getEmail())) && (retrieveProductID(order.getProductID()))) {
-			log.info("Order is invalid");
-			return null;
+		log.info("Value of the email " + retrieveEmail(order.getEmail()));
+		log.info("value of the productID " + retrieveProductID(order.getProductID()));
 
-		} else {
-			log.info("Order is valid");
-			return ordersRepository.save(order);
+//		&&retrieveEmail(order.getEmail())
+//		if (!(retrieveProductID(order.getProductID())) && (retrieveEmail(order.getEmail())))
+//		if (retrieveProductID(order.getProductID()) && retrieveEmail(order.getEmail())){
+////			log.info("Order is valid");
+////			ordersRepository.save(order);
+//			log.info("Order is invalid");
+//
+//
+//		} else if ((retrieveProductID(order.getProductID())) && !(retrieveEmail(order.getEmail()))) {
+//			log.info("Order is invalid");
+//
+////			return null;
+//
+//		} else  {
+//			log.info("Order is valid");
+//			ordersRepository.save(order);
+////				return null;
+//
+//		}
+		if(retrieveEmail(order.getEmail())&&!retrieveProductID(order.getProductID())) {
+			ordersRepository.save(order);
+		}else {
+			log.info("order is invalid");
 		}
-//		return retrieveEmail(order.getEmail()) ? ordersRepository.save(order) : null;
-	}
-
-	public boolean retrieveEmail(String email) {
-		boolean emailFound = false;
-		List<DataResponse> dataResponseList = getApiResponseData();
-		for (DataResponse data : dataResponseList) {
-			if (!email.equals(data.getEmail())) {
-				emailFound = false;
-				log.info("Email does not exist");
-			} else {
-				emailFound = true;
-				log.info("Email does not exist");
-			}
-		}
-		return emailFound;
-	}
-
-	public boolean retrieveProductID(int productID) {
-		boolean productExist = false;
-		List<Order> ordersList = getAllOrders();
-		for (Order order : ordersList) {
-			if (productID != order.getProductID()) {
-				productExist = false;
-				log.info("Product does not exist");
-			} else {
-				productExist = true;
-				log.info("Product already exists");
-			}
-		}
-		return productExist;
+//		return retrieveEmail(order.getEmail())&& !(retrieveProductID(Integer.toString(order.getProductID())))? ordersRepository.save(order) : null;
 	}
 
 	@Transactional
@@ -112,5 +101,44 @@ public class OrdersService {
 		ApiResponse apiResponse = retriveUsersData();
 		log.info("Retrieve api data");
 		return apiResponse.getData();
+	}
+
+	public boolean retrieveEmail(String email) {
+		boolean emailFound = false;
+		List<DataResponse> dataResponseList = getApiResponseData();
+		for (DataResponse data : dataResponseList) {
+			if (!(email.equals(data.getEmail()))) {
+				emailFound = false;
+				log.info(data.getEmail() + " false email");
+				break;
+			} else {
+				emailFound = true;
+				log.info(email + "true email");
+				break;
+			}
+		}
+		log.info("Email Found " + emailFound);
+		return emailFound;
+	}
+
+	public boolean retrieveProductID(int productID) {
+		boolean productExist = false;
+		List<Order> ordersList = ordersRepository.findAll();
+		for (Order order : ordersList) {
+			if (order.getProductID()!=productID) {
+				productExist = false;
+				log.info(order.getProductID() + " false ID");
+//				break;
+			} else {
+				productExist = true;
+				log.info(order.getProductID() + " true ID");
+//				continue;
+				break;
+
+			}
+		}
+		log.info("product Found " + productExist);
+
+		return productExist;
 	}
 }
