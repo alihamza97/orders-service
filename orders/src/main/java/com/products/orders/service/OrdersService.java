@@ -109,11 +109,9 @@ public class OrdersService {
 		for (DataResponse data : dataResponseList) {
 			if (!(email.equals(data.getEmail()))) {
 				emailFound = false;
-				log.info(data.getEmail() + " false email");
-				break;
+//				break;
 			} else {
 				emailFound = true;
-				log.info(email + "true email");
 				break;
 			}
 		}
@@ -132,7 +130,6 @@ public class OrdersService {
 			} else {
 				productExist = true;
 				log.info(order.getProductID() + " true ID");
-//				continue;
 				break;
 
 			}
