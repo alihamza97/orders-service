@@ -27,5 +27,4 @@ public class ApiResponse {
 	@JsonAlias({ "total_pages" })
 	private String totalPages;
 	private List<DataResponse> data;
-//	private  List<String> support ;
 }

@@ -21,8 +21,9 @@ public class OrdersController {
 	private OrdersService ordersService;
 
 	@PostMapping("/createOrder")
-	public Order saveOrder(@RequestBody Order order) {
-		return ordersService.createProduct(order);
+	public int saveOrder(@RequestBody Order order) {
+		ordersService.createProduct(order);
+		return order.getOrderNumber();
 	}
 
 	@GetMapping("/retriveOrders")

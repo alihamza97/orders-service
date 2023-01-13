@@ -59,8 +59,10 @@ public class OrdersService {
 		for (DataResponse data : dataResponseList) {
 			if (!email.equals(data.getEmail())) {
 				emailFound = false;
+				log.info("Email does not exist");
 			} else {
 				emailFound = true;
+				log.info("Email does not exist");
 			}
 		}
 		return emailFound;
@@ -72,8 +74,10 @@ public class OrdersService {
 		for (Order order : ordersList) {
 			if (productID != order.getProductID()) {
 				productExist = false;
+				log.info("Product does not exist");
 			} else {
 				productExist = true;
+				log.info("Product already exists");
 			}
 		}
 		return productExist;
@@ -89,23 +93,24 @@ public class OrdersService {
 		ApiResponse apiResponse = null;
 		DataResponse dataResponse = null;
 		ResponseEntity<String> responseEntity = restTemplate.exchange(apiResource, HttpMethod.GET, null, String.class);
-		String data = responseEntity.getBody();
-		log.info("Response message from data source [{}]", data.toString());
+		String retrievedData = responseEntity.getBody();
+		log.info("Response message from data source [{}]", retrievedData.toString());
 		try {
-			apiResponse = objectMapper.readValue(data, ApiResponse.class);
+			apiResponse = objectMapper.readValue(retrievedData, ApiResponse.class);
 			for (DataResponse response : apiResponse.getData()) {
 				dataResponse = response;
 			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		log.info("Response after mapping [{}]", data.toString());
+		log.info("Response after mapping [{}]", retrievedData);
 
 		return apiResponse;
 	}
 
 	public List<DataResponse> getApiResponseData() {
 		ApiResponse apiResponse = retriveUsersData();
+		log.info("Retrieve api data");
 		return apiResponse.getData();
 	}
 }
