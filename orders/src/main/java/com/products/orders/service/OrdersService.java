@@ -37,7 +37,7 @@ public class OrdersService {
 			false);
 
 	@Transactional
-	public void createProduct(Order order) throws AccessDeniedException {
+	public void createProduct(Order order) throws OrdersException {
 		log.info("Creating Order");
 		if (retrieveEmail(order.getEmail()) && !retrieveProductID(order.getProductID())) {
 			ordersRepository.save(order);
