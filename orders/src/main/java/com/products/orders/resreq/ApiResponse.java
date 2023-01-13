@@ -1,6 +1,5 @@
 package com.products.orders.resreq;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.stereotype.Component;

@@ -1,21 +1,18 @@
 package com.products.orders.service;
 
-import java.util.ArrayList;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
-
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.products.orders.exception.OrdersException;
 import com.products.orders.model.Order;
 import com.products.orders.repository.OrdersRepository;
 import com.products.orders.resreq.ApiResponse;
@@ -40,66 +37,47 @@ public class OrdersService {
 			false);
 
 	@Transactional
-	public void createProduct(Order order) {
+	public void createProduct(Order order) throws AccessDeniedException {
 		log.info("Creating Order");
-		log.info("Value of the email " + retrieveEmail(order.getEmail()));
-		log.info("value of the productID " + retrieveProductID(order.getProductID()));
-
-//		&&retrieveEmail(order.getEmail())
-//		if (!(retrieveProductID(order.getProductID())) && (retrieveEmail(order.getEmail())))
-//		if (retrieveProductID(order.getProductID()) && retrieveEmail(order.getEmail())){
-////			log.info("Order is valid");
-////			ordersRepository.save(order);
-//			log.info("Order is invalid");
-//
-//
-//		} else if ((retrieveProductID(order.getProductID())) && !(retrieveEmail(order.getEmail()))) {
-//			log.info("Order is invalid");
-//
-////			return null;
-//
-//		} else  {
-//			log.info("Order is valid");
-//			ordersRepository.save(order);
-////				return null;
-//
-//		}
-		if(retrieveEmail(order.getEmail())&&!retrieveProductID(order.getProductID())) {
+		if (retrieveEmail(order.getEmail()) && !retrieveProductID(order.getProductID())) {
 			ordersRepository.save(order);
-		}else {
+			log.info("Order has been saved");
+		} else {
 			log.info("order is invalid");
+			throw new OrdersException("Order is Invalid");
 		}
-//		return retrieveEmail(order.getEmail())&& !(retrieveProductID(Integer.toString(order.getProductID())))? ordersRepository.save(order) : null;
 	}
 
 	@Transactional
 	public List<Order> getAllOrders() {
 		log.info("Retrieving list of orders");
-		return ordersRepository.findAll();
+		List<Order> ordersList = ordersRepository.findAll();
+		if (ordersList.isEmpty() || ordersList == null) {
+			throw new NullPointerException("No orders found");
+		} else {
+			return ordersRepository.findAll();
+		}
 	}
 
 	public ApiResponse retriveUsersData() {
 		ApiResponse apiResponse = null;
-		DataResponse dataResponse = null;
 		ResponseEntity<String> responseEntity = restTemplate.exchange(apiResource, HttpMethod.GET, null, String.class);
 		String retrievedData = responseEntity.getBody();
-		log.info("Response message from data source [{}]", retrievedData.toString());
+		log.info("Response message from data source [{}]", retrievedData);
 		try {
 			apiResponse = objectMapper.readValue(retrievedData, ApiResponse.class);
-			for (DataResponse response : apiResponse.getData()) {
-				dataResponse = response;
-			}
+			log.info("Response after mapping [{}]", retrievedData);
+
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		log.info("Response after mapping [{}]", retrievedData);
 
 		return apiResponse;
 	}
 
 	public List<DataResponse> getApiResponseData() {
 		ApiResponse apiResponse = retriveUsersData();
-		log.info("Retrieve api data");
+		log.info("Retrieving api data{}", apiResponse.getData());
 		return apiResponse.getData();
 	}
 
@@ -109,7 +87,6 @@ public class OrdersService {
 		for (DataResponse data : dataResponseList) {
 			if (!(email.equals(data.getEmail()))) {
 				emailFound = false;
-//				break;
 			} else {
 				emailFound = true;
 				break;
@@ -123,18 +100,15 @@ public class OrdersService {
 		boolean productExist = false;
 		List<Order> ordersList = ordersRepository.findAll();
 		for (Order order : ordersList) {
-			if (order.getProductID()!=productID) {
+			if (order.getProductID() != productID) {
 				productExist = false;
-				log.info(order.getProductID() + " false ID");
-//				break;
 			} else {
 				productExist = true;
-				log.info(order.getProductID() + " true ID");
 				break;
 
 			}
 		}
-		log.info("product Found " + productExist);
+		log.info("Product found " + productExist);
 
 		return productExist;
 	}

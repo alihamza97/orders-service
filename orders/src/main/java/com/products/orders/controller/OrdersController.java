@@ -1,5 +1,6 @@
 package com.products.orders.controller;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,20 @@ public class OrdersController {
 
 	@PostMapping("/createOrder")
 	public int saveOrder(@RequestBody Order order) {
-		ordersService.createProduct(order);
+		try {
+			ordersService.createProduct(order);
+		} catch (AccessDeniedException e) {
+			e.printStackTrace();
+		}
 		return order.getOrderNumber();
 	}
 
 	@GetMapping("/retriveOrders")
-	public List<Order> retrieveAllOrders() {
+	public List<Order> retrieveAllOrders() throws NullPointerException {
 		return ordersService.getAllOrders();
 	}
 
+//	For api testing 
 	@GetMapping("/fetchResponseData")
 	public List<DataResponse> fetchResponseData() {
 		return ordersService.getApiResponseData();
