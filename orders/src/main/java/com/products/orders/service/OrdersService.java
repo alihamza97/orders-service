@@ -18,17 +18,17 @@ import com.products.orders.repository.OrdersRepository;
 import com.products.orders.resreq.ApiResponse;
 import com.products.orders.resreq.DataResponse;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class OrdersService {
 
-	@Autowired
-	private OrdersRepository ordersRepository;
+	private final OrdersRepository ordersRepository;
 
-	@Autowired
-	private RestTemplate restTemplate;
+	private final RestTemplate restTemplate;
 
 	@Value("${api.resource}")
 	private String apiResource;
@@ -37,14 +37,22 @@ public class OrdersService {
 			false);
 
 	@Transactional
-	public void createProduct(Order order) throws OrdersException {
+	public Order createProduct(Order order) {
 		log.info("Creating Order");
 		if (retrieveEmail(order.getEmail()) && !retrieveProductID(order.getProductID())) {
-			ordersRepository.save(order);
-			log.info("Order has been saved");
+			log.info("Saving order...");
+			return ordersRepository.save(order);
 		} else {
 			log.info("order is invalid");
-			throw new OrdersException("Order is Invalid");
+			if (retrieveProductID(order.getProductID()) && !retrieveEmail(order.getEmail())) {
+				throw new OrdersException("Invalid order with wrong email or duplicate product ID");
+			} else if (!retrieveEmail(order.getEmail())) {
+				throw new OrdersException("Email is not correct");
+			} else if (retrieveProductID(order.getProductID())) {
+				throw new OrdersException("Product already exists with the simillar product ID");
+			} else {
+				throw new OrdersException("Order is Invalid");
+			}
 		}
 	}
 
