@@ -1,11 +1,7 @@
 package com.products.orders.resreq;
 
 import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.annotation.JsonAlias;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -13,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Component
 @Getter
 @Setter
 @ToString
