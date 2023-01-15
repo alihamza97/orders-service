@@ -2,6 +2,7 @@ package com.products.orders.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.products.orders.exception.ErrorResponse;
@@ -23,6 +24,14 @@ public class OrdersExceptionController {
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
 		errorResponse.setMessage(exception.getMessage());
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler
+	public ResponseEntity<ErrorResponse> wrongInputException(HttpMessageNotReadableException exception) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+		errorResponse.setMessage("Invalid input");
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
