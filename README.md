@@ -16,7 +16,7 @@ Please make sure following tools are installed in your local machine to run this
 
 Please follow the instructions below to run this app.
 
-1:- Download this project.
+1:- Download this project and unzip it.
 
 2:- Open windows command line.
 
