@@ -27,7 +27,7 @@ public class OrdersController {
 	private final OrdersService ordersService;
 
 	
-	 @PostMapping("/create-order")
+	    @PostMapping("/create-order")
 	    public Map<String, Integer> getGreeting(@RequestBody Order order) {
 	        final Map<String, Integer> orderMap = new HashMap<>();
 	        ordersService.createProduct(order);
