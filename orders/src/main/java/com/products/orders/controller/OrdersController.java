@@ -1,10 +1,16 @@
 package com.products.orders.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.hibernate.boot.jaxb.mapping.spi.JaxbConvert;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.products.orders.model.Order;
 import com.products.orders.resreq.DataResponse;
@@ -20,14 +26,19 @@ public class OrdersController {
 
 	private final OrdersService ordersService;
 
-	@PostMapping("/createOrder")
-	public int saveOrder(@RequestBody Order order) {
-		ordersService.createProduct(order);
-		log.info("Order created");
-		return order.getOrderNumber();
-	}
+	
+	 @PostMapping("/create-order")
+	    public Map<String, Integer> getGreeting(@RequestBody Order order) {
+	        final Map<String, Integer> result = new HashMap<>();
+	        ordersService.createProduct(order);
+	        int orderNumber=order.getOrderNumber();
+	        result.put("orderNumber", orderNumber);
 
-	@GetMapping("/retriveOrders")
+	        return result;
+	    }
+
+
+	@GetMapping("/retrive-orders")
 	public List<Order> retrieveAllOrders() throws NullPointerException {
 		log.info("Retrieving all order");
 		List<Order> ordersList = ordersService.getAllOrders();
@@ -36,7 +47,7 @@ public class OrdersController {
 	}
 
 //	For api testing 
-	@GetMapping("/fetchResponseData")
+	@GetMapping("/fetch-response-data")
 	public List<DataResponse> fetchResponseData() {
 		return ordersService.getApiResponseData();
 	}
