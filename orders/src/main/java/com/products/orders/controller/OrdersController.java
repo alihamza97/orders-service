@@ -28,13 +28,13 @@ public class OrdersController {
 
 	
 	 @PostMapping("/create-order")
-	    public Map<String, Integer> getGreeting(@RequestBody Order order) {
-	        final Map<String, Integer> result = new HashMap<>();
+	 public Map<String, Integer> getGreeting(@RequestBody Order order) {
+	        final Map<String, Integer> orderMap = new HashMap<>();
 	        ordersService.createProduct(order);
 	        int orderNumber=order.getOrderNumber();
-	        result.put("orderNumber", orderNumber);
+	        orderMap.put("orderNumber", orderNumber);
 
-	        return result;
+	        return orderMap;
 	    }
 
 
