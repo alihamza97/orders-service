@@ -26,17 +26,14 @@ public class OrdersController {
 
 	private final OrdersService ordersService;
 
-	
-	 @PostMapping("/create-order")
-	 public Map<String, Integer> getGreeting(@RequestBody Order order) {
-	        final Map<String, Integer> orderMap = new HashMap<>();
-	        ordersService.createProduct(order);
-	        int orderNumber=order.getOrderNumber();
-	        orderMap.put("orderNumber", orderNumber);
-
-	        return orderMap;
-	    }
-
+	@PostMapping("/create-order")
+	public Map<String, Integer> getGreeting(@RequestBody Order order) {
+		final Map<String, Integer> orderMap = new HashMap<>();
+		ordersService.createProduct(order);
+		int orderNumber = order.getOrderNumber();
+		orderMap.put("orderNumber", orderNumber);
+		return orderMap;
+	}
 
 	@GetMapping("/retrive-orders")
 	public List<Order> retrieveAllOrders() throws NullPointerException {

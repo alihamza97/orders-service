@@ -9,12 +9,10 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,12 +23,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.ExpectedCount;
-
 import org.springframework.web.client.RestTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.products.orders.exception.OrdersException;
 import com.products.orders.model.Order;
 import com.products.orders.repository.OrdersRepository;
 import com.products.orders.resreq.ApiResponse;
@@ -67,7 +64,7 @@ public class OrdersServiceTests {
 		dataResponseList.add(new DataResponse(3, "alihamza3.0@whatever.com", "Ali", "Hamza 3.0", "imguri"));
 
 		final String responseString = mapper.writeValueAsString(apiResponse);
-//
+
 		mockServer.expect(ExpectedCount.once(), request -> {
 			try {
 				new URI("https://fakeURI.com");
@@ -165,7 +162,6 @@ public class OrdersServiceTests {
 
 	@Test
 	void should_return_all_orders() throws JsonProcessingException {
-		ApiResponse apiResponse = setApiResponse();
 		List<Order> myOrder = new ArrayList<>();
 		myOrder.add(Order.builder().orderNumber(124).email("charles.morris@reqres.in").firstName("George")
 				.lastName("Bluth").productID(4444).build());
@@ -175,8 +171,15 @@ public class OrdersServiceTests {
 	}
 
 	@Test
+	void should_throw_nullException_orders() throws JsonProcessingException {
+		List<Order> myOrder = new ArrayList<>();
+		when(ordersRepository.findAll()).thenReturn(myOrder);
+		Exception exception = assertThrows(NullPointerException.class, () -> ordersService.getAllOrders());
+		assertEquals("No orders found", exception.getMessage());
+	}
+
+	@Test
 	void should_retrieve_productID() throws JsonProcessingException {
-		ApiResponse apiResponse = setApiResponse();
 		List<Order> myOrder = new ArrayList<>();
 		myOrder.add(Order.builder().orderNumber(124).email("charles.morris@reqres.in").firstName("George")
 				.lastName("Bluth").productID(4444).build());
@@ -193,32 +196,125 @@ public class OrdersServiceTests {
 		assertTrue(isProductFound);
 	}
 
-//	@Test
-//	void should_return_no_orders() throws JsonProcessingException {
-//		ApiResponse apiResponse = setApiResponse();
-////		List<Order> myOrder = new ArrayList<>();
-//		Order myOrder=Order.builder().orderNumber(124).email("charles.morris@reqres.in").firstName("George")
-//				.lastName("Bluth").productID(4444).build();
-//		when(ordersRepository.save(myOrder)).thenReturn(myOrder);
-//		Order order=ordersService.createProduct(myOrder);
-//		assertThat(order).isNotNull();
-//	}
+	@Test
+	void should_retrieve_no_productID() throws JsonProcessingException {
+		List<Order> myOrder = new ArrayList<>();
+		myOrder.add(Order.builder().orderNumber(124).email("charles.morris@reqres.in").firstName("George")
+				.lastName("Bluth").productID(4444).build());
+		when(ordersRepository.findAll()).thenReturn(myOrder);
+		int productID = 444;
+		boolean isProductFound = false;
+		isProductFound = ordersService.retrieveProductID(productID);
+		assertFalse(isProductFound);
+	}
+
+	@Test
+	void should_save_orders() throws JsonProcessingException {
+		ApiResponse apiResponse = setApiResponse();
+
+		final String responseString = mapper.writeValueAsString(apiResponse);
+		mockServer.expect(ExpectedCount.manyTimes(), request -> {
+			try {
+				new URI("https://fakeURI.com");
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}).andExpect(method(HttpMethod.GET))
+				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(responseString));
+
+		List<DataResponse> receievedExpectedData = ordersService.getApiResponseData();
+		String email = "alihazma@whatever.com";
+		boolean emailFound = false;
+		for (DataResponse e : receievedExpectedData) {
+			if (e.getEmail().equals("alihazma@whatever.com")) {
+				emailFound = true;
+				break;
+			}
+		}
+		emailFound = ordersService.retrieveEmail(email);
+
+		List<Order> myOrder = new ArrayList<>();
+		myOrder.add(Order.builder().orderNumber(124).email("alihazma@whatever.com").firstName("George")
+				.lastName("Bluth").productID(4444).build());
+		when(ordersRepository.findAll()).thenReturn(myOrder);
+		int productID = 4444;
+		boolean isProductFound = false;
+		for (Order o : myOrder) {
+			if (o.getProductID() == productID) {
+				isProductFound = true;
+				break;
+			}
+		}
+		isProductFound = ordersService.retrieveProductID(productID);
+
+		Order orderToSave = Order.builder().orderNumber(14).email("alihazma@whatever.com").firstName("George")
+				.lastName("Bluth").productID(4424).build();
+		when(ordersRepository.save(orderToSave)).thenReturn(orderToSave);
+		Order order = ordersService.createProduct(orderToSave);
+
+		mockServer.verify();
+		assertTrue(isProductFound);
+		assertTrue(emailFound);
+		assertThat(order).isNotNull();
+	}
+
+	@Test
+	void should_throw_ordersException_falseEmail() throws JsonProcessingException {
+		ApiResponse apiResponse = setApiResponse();
+
+		final String responseString = mapper.writeValueAsString(apiResponse);
+		mockServer.expect(ExpectedCount.manyTimes(), request -> {
+			try {
+				new URI("https://fakeURI.com");
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}).andExpect(method(HttpMethod.GET))
+				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(responseString));
+
+		List<DataResponse> receievedExpectedData = ordersService.getApiResponseData();
+		String email = "alihazma@whaever.com";
+		boolean emailFound = false;
+		emailFound = ordersService.retrieveEmail(email);
+
+		List<Order> myOrder = new ArrayList<>();
+		myOrder.add(Order.builder().orderNumber(124).email("alihazma@whatever.com").firstName("George")
+				.lastName("Bluth").productID(4444).build());
+		when(ordersRepository.findAll()).thenReturn(myOrder);
+		int productID = 4444;
+		boolean isProductFound = false;
+		for (Order o : myOrder) {
+			if (o.getProductID() == productID) {
+				isProductFound = true;
+				break;
+			}
+		}
+		isProductFound = ordersService.retrieveProductID(productID);
+
+		Order orderToSave = Order.builder().orderNumber(14).email("alihazmawhatever.com").firstName("George")
+				.lastName("Bluth").productID(4424).build();
+		when(ordersRepository.save(orderToSave)).thenReturn(orderToSave);
+		Exception exception = assertThrows(OrdersException.class, () -> ordersService.createProduct(orderToSave));
+
+		mockServer.verify();
+		assertTrue(isProductFound);
+		assertFalse(emailFound);
+		assertEquals("Email is not correct", exception.getMessage());
+
+	}
 
 	private ApiResponse setApiResponse() {
 		ApiResponse apiResponse = new ApiResponse();
-
 		List<DataResponse> dataResponse = new ArrayList<>();
 		dataResponse.add(new DataResponse(1, "alihazma@whatever.com", "Ali", "Hamza", "imguri"));
 		dataResponse.add(new DataResponse(2, "alihamza2.0@whatever.com", "Ali", "Hamza 2.0", "imguri"));
 		dataResponse.add(new DataResponse(3, "alihamza3.0@whatever.com", "Ali", "Hamza 3.0", "imguri"));
-
 		apiResponse.setPage("1");
 		apiResponse.setPerPage("4");
 		apiResponse.setTotal("5");
 		apiResponse.setTotalPages("2");
 		apiResponse.setData(dataResponse);
 		return apiResponse;
-
 	}
 
 }
