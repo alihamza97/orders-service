@@ -115,9 +115,7 @@ public class OrdersService {
 				break;
 
 			}
-			for(int i=0;i<ordersList.size();i++) {
-				
-			}
+
 		}
 		log.info("Product found " + productExist);
 

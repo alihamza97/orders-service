@@ -2,6 +2,11 @@ package com.products.orders.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
@@ -10,6 +15,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -80,8 +86,125 @@ public class OrdersServiceTests {
 		assertThat(receivedResponse.getData()).isNotNull();
 	}
 
-	private ApiResponse setApiResponse() {
+	@Test
+	void should_retrieve_listData() throws JsonProcessingException {
+		ApiResponse apiResponse = setApiResponse();
+		List<DataResponse> dataResponseList = new ArrayList<>();
+		dataResponseList.add(new DataResponse(1, "alihazma@whatever.com", "Ali", "Hamza", "imguri"));
+		dataResponseList.add(new DataResponse(2, "alihamza2.0@whatever.com", "Ali", "Hamza 2.0", "imguri"));
+		dataResponseList.add(new DataResponse(3, "alihamza3.0@whatever.com", "Ali", "Hamza 3.0", "imguri"));
 
+		final String responseString = mapper.writeValueAsString(apiResponse);
+//
+		mockServer.expect(ExpectedCount.once(), request -> {
+			try {
+				new URI("https://fakeURI.com");
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}).andExpect(method(HttpMethod.GET))
+				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(responseString));
+		List<DataResponse> receievedExpectedData = ordersService.getApiResponseData();
+
+		mockServer.verify();
+		assertEquals(dataResponseList, receievedExpectedData);
+		assertThat(receievedExpectedData).isNotNull();
+	}
+
+	@Test
+	void should_retrieve_email() throws JsonProcessingException {
+		ApiResponse apiResponse = setApiResponse();
+
+		final String responseString = mapper.writeValueAsString(apiResponse);
+		mockServer.expect(ExpectedCount.manyTimes(), request -> {
+			try {
+				new URI("https://fakeURI.com");
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}).andExpect(method(HttpMethod.GET))
+				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(responseString));
+
+		List<DataResponse> receievedExpectedData = ordersService.getApiResponseData();
+		String email = "alihazma@whatever.com";
+		boolean emailFound = false;
+		for (DataResponse e : receievedExpectedData) {
+			if (e.getEmail().equals("alihazma@whatever.com")) {
+				emailFound = true;
+				break;
+			}
+		}
+		emailFound = ordersService.retrieveEmail(email);
+
+		mockServer.verify();
+		assertTrue(emailFound);
+	}
+
+	@Test
+	void should_notRetrieve_email() throws JsonProcessingException {
+		ApiResponse apiResponse = setApiResponse();
+
+		final String responseString = mapper.writeValueAsString(apiResponse);
+		mockServer.expect(ExpectedCount.manyTimes(), request -> {
+			try {
+				new URI("https://fakeURI.com");
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}).andExpect(method(HttpMethod.GET))
+				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(responseString));
+
+		List<DataResponse> receievedExpectedData = ordersService.getApiResponseData();
+		String email = "alihazma@whateve";
+		boolean emailFound = false;
+		emailFound = ordersService.retrieveEmail(email);
+
+		mockServer.verify();
+		assertFalse(emailFound);
+	}
+
+	@Test
+	void should_return_all_orders() throws JsonProcessingException {
+		ApiResponse apiResponse = setApiResponse();
+		List<Order> myOrder = new ArrayList<>();
+		myOrder.add(Order.builder().orderNumber(124).email("charles.morris@reqres.in").firstName("George")
+				.lastName("Bluth").productID(4444).build());
+		when(ordersRepository.findAll()).thenReturn(myOrder);
+		List<Order> orders = ordersService.getAllOrders();
+		assertThat(orders).isNotNull();
+	}
+
+	@Test
+	void should_retrieve_productID() throws JsonProcessingException {
+		ApiResponse apiResponse = setApiResponse();
+		List<Order> myOrder = new ArrayList<>();
+		myOrder.add(Order.builder().orderNumber(124).email("charles.morris@reqres.in").firstName("George")
+				.lastName("Bluth").productID(4444).build());
+		when(ordersRepository.findAll()).thenReturn(myOrder);
+		int productID = 4444;
+		boolean isProductFound = false;
+		for (Order o : myOrder) {
+			if (o.getProductID() == productID) {
+				isProductFound = true;
+				break;
+			}
+		}
+		isProductFound = ordersService.retrieveProductID(productID);
+		assertTrue(isProductFound);
+	}
+
+//	@Test
+//	void should_return_no_orders() throws JsonProcessingException {
+//		ApiResponse apiResponse = setApiResponse();
+////		List<Order> myOrder = new ArrayList<>();
+//		Order myOrder=Order.builder().orderNumber(124).email("charles.morris@reqres.in").firstName("George")
+//				.lastName("Bluth").productID(4444).build();
+//		when(ordersRepository.save(myOrder)).thenReturn(myOrder);
+//		Order order=ordersService.createProduct(myOrder);
+//		assertThat(order).isNotNull();
+//	}
+
+	private ApiResponse setApiResponse() {
 		ApiResponse apiResponse = new ApiResponse();
 
 		List<DataResponse> dataResponse = new ArrayList<>();
