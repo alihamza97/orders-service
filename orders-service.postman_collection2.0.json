@@ -23,7 +23,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/orders/createOrder",
+							"raw": "http://localhost:8080/api/orders/create-order",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -53,7 +53,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/orders/createOrder",
+							"raw": "http://localhost:8080/api/orders/create-order",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -83,7 +83,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/orders/createOrder",
+							"raw": "http://localhost:8080/api/orders/create-order",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -113,7 +113,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/orders/createOrder",
+							"raw": "http://localhost:8080/api/orders/create-order",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -148,7 +148,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/orders/createOrder",
+							"raw": "http://localhost:8080/api/orders/create-order",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -178,7 +178,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/orders/createOrder",
+							"raw": "http://localhost:8080/api/orders/create-order",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -208,7 +208,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/orders/createOrder",
+							"raw": "http://localhost:8080/api/orders/create-order",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -238,7 +238,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/orders/createOrder",
+							"raw": "http://localhost:8080/api/orders/create-order",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -261,7 +261,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/orders/retriveOrders",
+					"raw": "http://localhost:8080/api/orders/retrive-orders",
 					"protocol": "http",
 					"host": [
 						"localhost"
