@@ -1,0 +1,322 @@
+{
+	"info": {
+		"_postman_id": "a70727a0-ddbe-4925-8a36-b01387111879",
+		"name": "orders-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GeorgeBluth",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"george.bluth@reqres.in\",\r\n\"firstName\":\"George\",\r\n\"lastName\":\"Bluth\", \r\n\"productID\":6151 }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/orders/create-order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"orders",
+								"create-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order Wrong Email and ID",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"george@reqres.in\",\r\n\"firstName\":\"George\",\r\n\"lastName\":\"Bluth\", \r\n\"productID\":6151}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/orders/create-order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"orders",
+								"create-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order Wrong Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"george@reqres.in\",\r\n\"firstName\":\"George\",\r\n\"lastName\":\"Bluth\", \r\n\"productID\":5400}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/orders/create-order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"orders",
+								"create-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order Duplicate ProductID",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"george.bluth@reqres.in\",\r\n\"firstName\":\"George\",\r\n\"lastName\":\"Bluth\", \r\n\"productID\":6151}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/orders/create-order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"orders",
+								"create-order"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CharlesMorris",
+			"item": [
+				{
+					"name": "Charles Morris",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"charles.morris@reqres.in\",\r\n\"firstName\":\"Charles\",\r\n\"lastName\":\"Morris\", \r\n\"productID\":6464 }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/orders/create-order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"orders",
+								"create-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order Wrong Email and ID",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"charles@reqres.in\",\r\n\"firstName\":\"Charles\",\r\n\"lastName\":\"Morris\", \r\n\"productID\":6464}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/orders/create-order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"orders",
+								"create-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order Wrong Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"charles@reqres.in\",\r\n\"firstName\":\"Charles\",\r\n\"lastName\":\"Morris\", \r\n\"productID\":7774}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/orders/create-order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"orders",
+								"create-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order Duplicate ProductID",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"charles.morris@reqres.in\",\r\n\"firstName\":\"Charles\",\r\n\"lastName\":\"Morris\", \r\n\"productID\":6464}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/orders/create-order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"orders",
+								"create-order"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Retrieve Orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/orders/retrive-orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"orders",
+						"retrive-orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Response Data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/orders/fetchResponseData",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"orders",
+						"fetchResponseData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/orders/fetchResponseData",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"orders",
+						"fetchResponseData"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
